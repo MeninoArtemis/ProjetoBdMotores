@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados dos Motores</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Barra de Navegação -->
+    <nav>
+        <ul>
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Dados dos Motores</a></li>
+            <li><a href="#">Exportar</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Barra de pesquisa geral -->
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Pesquisar dados..." oninput="filterData()">
+        </div>
+
+        <h1>Dados dos Motores</h1>
+
+        <!-- Formulário para Adicionar Dados dos Motores -->
+        <form id="Form" enctype="multipart/form-data">
+            <input type="text" id="marca" placeholder="Marca" required>
+            <input type="text" id="modelo" placeholder="Modelo" required>
+            <input type="text" id="cv" placeholder="CV" required>
+            <input type="text" id="volts" placeholder="Volts" required>
+            <input type="text" id="amperes" placeholder="Amperes" required>
+            <input type="text" id="rpm" placeholder="RPM" required>
+            <input type="text" id="hz" placeholder="Hz" required>
+            <input type="text" id="isolacao" placeholder="Isolação" required>
+            <input type="text" id="ip" placeholder="IP" required>
+            <input type="text" id="es" placeholder="E.S" required>
+            <input type="text" id="cPacote" placeholder="C. Pacote" required>
+            <input type="text" id="dPacotes" placeholder="D. Pacotes" required>
+            <input type="text" id="nRanhuras" placeholder="N. Ranhuras" required>
+            <input type="text" id="ampVPasse" placeholder="Amp V. Passe" required>
+            <input type="text" id="espias" placeholder="Espias" required>
+            <input type="text" id="fio" placeholder="Fio" required>
+            <input type="text" id="ligSerie" placeholder="Ligação Série" required>
+            <input type="text" id="ligParalelo" placeholder="Ligação Paralelo" required>
+            <input type="text" id="terminais" placeholder="Terminais" required>
+            <input type="text" id="pesoM" placeholder="Peso M" required>
+            <input type="text" id="grupoB" placeholder="Grupo B" required>
+            <input type="text" id="bGrupo" placeholder="B Grupo" required>
+            <textarea id="obs" placeholder="Observações" required></textarea>
+            <input type="date" id="data" required>
+
+            <label for="imagem">Laudo (Imagem):</label>
+            <input type="file" id="imagem" name="imagem" accept="image/*" required>
+
+            <button type="submit">Adicionar Dados do Motor</button>
+        </form>
+
+        <!-- Botões e Lista de Dados Existentes -->
+        <div id="osData">
+            <button onclick="displayData()">Mostrar Dados Existentes</button>
+            <button onclick="exportOSToExcel()">Exportar para Excel</button>
+            <ul id="osList"></ul>
+        </div>
+    </div>
+
+    <script src="../js/banco_dados.js"></script>
+</body>
+</html>
+

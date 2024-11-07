@@ -1,0 +1,141 @@
+document.getElementById('Form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o envio do formulário para o servidor
+// Simulação de dados dos motores 
+const motorData = [
+    { marca: 'Marca1', modelo: 'Modelo1', cv: 50, volts: 220, amperes: 10 },
+    { marca: 'Marca2', modelo: 'Modelo2', cv: 100, volts: 380, amperes: 20 },
+    { marca: 'Marca3', modelo: 'Modelo3', cv: 75, volts: 220, amperes: 15 },
+    // Adicione mais objetos conforme necessário
+];
+
+// Função para exibir os dados na lista
+function displayData() {
+    const osList = document.getElementById('osList');
+    osList.innerHTML = ''; // Limpa a lista antes de adicionar novos dados
+
+    motorData.forEach(data => {
+        const li = document.createElement('li');
+        li.textContent = `${data.marca} - ${data.modelo} - ${data.cv} CV - ${data.volts}V - ${data.amperes}A`;
+        osList.appendChild(li);
+    });
+}
+
+// Função para filtrar dados com base na pesquisa
+function filterData() {
+    const searchValue = document.getElementById('search').value.toLowerCase();
+    const filteredData = motorData.filter(data => {
+        return Object.values(data).some(val => val.toString().toLowerCase().includes(searchValue));
+    });
+
+    const osList = document.getElementById('osList');
+    osList.innerHTML = ''; // Limpa a lista antes de adicionar novos dados filtrados
+
+    filteredData.forEach(data => {
+        const li = document.createElement('li');
+        li.textContent = `${data.marca} - ${data.modelo} - ${data.cv} CV - ${data.volts}V - ${data.amperes}A`;
+        osList.appendChild(li);
+    });
+}
+    // Obtendo os valores dos campos
+    const formData = {
+        marca: document.getElementById('marca').value,
+        modelo: document.getElementById('modelo').value,
+        cv: document.getElementById('cv').value,
+        volts: document.getElementById('volts').value,
+        amperes: document.getElementById('amperes').value,
+        rpm: document.getElementById('rpm').value,
+        hz: document.getElementById('hz').value,
+        isolacao: document.getElementById('isolacao').value,
+        ip: document.getElementById('ip').value,
+        es: document.getElementById('es').value,
+        cPacote: document.getElementById('cPacote').value,
+        dPacotes: document.getElementById('dPacotes').value,
+        nRanhuras: document.getElementById('nRanhuras').value,
+        ampVPasse: document.getElementById('ampVPasse').value,
+        espias: document.getElementById('espias').value,
+        fio: document.getElementById('fio').value,
+        ligSerie: document.getElementById('ligSerie').value,
+        ligParalelo: document.getElementById('ligParalelo').value,
+        terminais: document.getElementById('terminais').value,
+        pesoM: document.getElementById('pesoM').value,
+        grupoB: document.getElementById('grupoB').value,
+        bGrupo: document.getElementById('bGrupo').value,
+        obs: document.getElementById('obs').value,
+        data: document.getElementById('data').value,
+        imagem: document.getElementById('imagem').files[0] // Arquivo da imagem
+    };
+
+    // Calculando o percentual de preenchimento
+    let filledFields = 0;
+    for (let key in formData) {
+        if (formData[key]) filledFields++;
+    }
+
+    const totalFields = Object.keys(formData).length;
+    const percentage = (filledFields / totalFields) * 100;
+
+    // Atualizando a barra de progresso
+    const progressBar = document.querySelector('.progress-bar');
+    progressBar.style.width = `${percentage}%`;
+    progressBar.textContent = `${Math.round(percentage)}% preenchido`;
+
+    // Exibindo mensagem de sucesso ou erro
+    if (percentage === 100) {
+        alert('Formulário preenchido com sucesso!');
+    } else {
+        alert('Preencha todos os campos antes de submeter!');
+    }
+
+    // Adicionando dados à lista de "OS" e simulando o salvamento no banco de dados (localStorage)
+    saveDataToDatabase(formData);
+    addDataToList(formData);
+});
+
+// Função para adicionar dados à lista de "OS"
+function addDataToList(data) {
+    const osList = document.getElementById('osList');
+    const li = document.createElement('li');
+    li.textContent = `Marca: ${data.marca}, Modelo: ${data.modelo}, CV: ${data.cv}, Volts: ${data.volts}, Amperes: ${data.amperes}`;
+    osList.appendChild(li);
+}
+
+// Função para salvar dados no banco de dados simulado (localStorage)
+function saveDataToDatabase(data) {
+    let savedData = JSON.parse(localStorage.getItem('motorsData')) || [];
+    savedData.push(data);
+    localStorage.setItem('motorsData', JSON.stringify(savedData));
+}
+
+// Função para exportar dados para Excel
+function exportOSToExcel() {
+    const osData = [];
+    const osListItems = document.querySelectorAll('#osList li');
+
+    osListItems.forEach(item => {
+        const itemData = item.textContent.split(', ');
+        osData.push(itemData.map(data => data.split(': ')[1]));
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(osData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Dados dos Motores');
+    XLSX.writeFile(wb, 'dados_motores.xlsx');
+}
+
+// Função para filtrar os dados com a pesquisa geral
+document.getElementById('search').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    const osListItems = document.querySelectorAll('#osList li');
+
+    osListItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? 'block' : 'none';
+    });
+});
+
+// Função para carregar dados salvos ao recarregar a página
+window.onload = function() {
+    const savedData = JSON.parse(localStorage.getItem('motorsData')) || [];
+    savedData.forEach(data => addDataToList(data));
+};
+
